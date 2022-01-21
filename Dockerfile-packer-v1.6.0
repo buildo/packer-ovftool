@@ -1,0 +1,14 @@
+FROM buildo/packer-ovftool
+
+RUN apt-get update && apt-get install -y ca-certificates mkisofs
+
+ENV PACKER_VERSION=1.6.0
+ENV PACKER_SHA256SUM=a678c995cb8dc232db3353881723793da5acc15857a807d96c52e96e671309d9
+
+ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip ./
+RUN echo "${PACKER_SHA256SUM} packer_${PACKER_VERSION}_linux_amd64.zip" | sha256sum -c -
+
+RUN unzip -o packer_${PACKER_VERSION}_linux_amd64.zip -d /bin
+RUN rm -f packer_${PACKER_VERSION}_linux_amd64.zip
+
+ENTRYPOINT ["/bin/packer"]
